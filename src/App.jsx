@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Auth/Login';
+import Signup from './components/Auth/Signup';
+import SurveyForm from './components/Survey/SurveyForm';
+import RecommendationPage from './components/Recommendations/RecommendationPage';
+import { auth } from './firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import ParticlesComponent from './components/Particle';
 
-function App() {
-  const [count, setCount] = useState(0)
+function PrivateRoute({ children }) {
+  const [user, loading] = useAuthState(auth);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  if (loading) {
+    return <div className="text-white">Loading...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 }
 
-export default App
+function App() {
+  return (
+    <div className="relative min-h-screen">
+      <ParticlesComponent id="tsparticles" theme="dark" />
+      <div className="relative z-10">
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route
+              path="/survey"
+              element={
+                <PrivateRoute>
+                  <SurveyForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/recommendations"
+              element={
+                <PrivateRoute>
+                  <RecommendationPage />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/" element={<Navigate to="/login" />} />
+          </Routes>
+        </Router>
+      </div>
+    </div>
+  );
+}
+
+export default App;
