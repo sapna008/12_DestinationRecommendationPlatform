@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/dashboard');
+      navigate('/survey');
     } catch (error) {
       setError('Invalid email or password');
     }

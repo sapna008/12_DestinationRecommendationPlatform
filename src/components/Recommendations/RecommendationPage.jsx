@@ -49,7 +49,7 @@ const RecommendationPage = () => {
             const recommendedPlaces = destinations[data.travelStyle]?.[data.preferredSeason] || [];
             setRecommendations(recommendedPlaces.map(place => ({
               name: place,
-              image: `https://source.unsplash.com/800x600/?${place.toLowerCase().replace(' ', '-')}`,
+              image: 'https://www.shutterstock.com/shutterstock/photos/2284975487/display_1500/stock-vector-group-of-travelers-is-depicted-around-an-earth-globe-with-various-travel-items-image-promoting-2284975487.jpg',
               description: `Experience the beauty and charm of ${place}. Perfect for ${data.travelStyle} travelers during ${data.preferredSeason}.`
             })));
           }
